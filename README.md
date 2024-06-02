@@ -7,9 +7,6 @@
 ![Project Maintenance][maintenance-shield]
 [![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
 
-[![Discord][discord-shield]][discord]
-[![Community Forum][forum-shield]][forum]
-
 **This integration will set up the following platforms.**
 
 Platform | Description
@@ -42,7 +39,7 @@ If you want to contribute to this please read the [Contribution guidelines](CONT
 ***
 
 [integration_blueprint]: https://github.com/goir/ha-solarmanager-ch
-[buymecoffee]: https://www.buymeacoffee.com/goir
+[buymecoffee]: https://buymeacoffee.com/goir
 [buymecoffeebadge]: https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=for-the-badge
 [commits-shield]: https://img.shields.io/github/commit-activity/y/goir/ha-solarmanager-ch.svg?style=for-the-badge
 [commits]: https://github.com/goir/ha-solarmanager-ch/commits/main
