@@ -1,3 +1,5 @@
 {
-    "name": "SolarManagerCH"
+    "name": "SolarManagerCH",
+    "content_in_root": false,
+    "render_readme": false
 }
