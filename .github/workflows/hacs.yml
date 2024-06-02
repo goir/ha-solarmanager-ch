@@ -1,4 +1,11 @@
-name: HACS Action
-uses: hacs/action@22.5.0
+name: check
+on: [push]
+jobs:
+  check:
+    steps:
+      - name: HACS Action
+        uses: hacs/action@22.5.0
+      - name: HASS
+        uses: home-assistant/actions/hassfest@master
 
 
