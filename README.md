@@ -30,7 +30,7 @@ After a restart of Home Assistant, this integration is configurable by via "Add 
 
 ## Configuration is done in the UI
 
-<!---->
+Enter a Name, your Solarmanager.ch Username and Password and the Solarmanager-ID (SMID) found in the solarmanager.ch webui.
 
 ## Contributions are welcome!
 
