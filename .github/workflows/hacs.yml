@@ -14,5 +14,5 @@ jobs:
         with:
           category: "integration"
           ignore: "brands"
-#      - name: HASS
-#        uses: home-assistant/actions/hassfest@master
+      - name: HASS
+        uses: home-assistant/actions/hassfest@master
