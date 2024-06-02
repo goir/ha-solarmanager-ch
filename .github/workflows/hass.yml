@@ -1,0 +1,2 @@
+name: HASS
+uses: home-assistant/actions/hassfest@master

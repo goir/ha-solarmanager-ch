@@ -1,5 +1,4 @@
-- name: HACS Action
-  uses: hacs/action@22.5.0
+name: HACS Action
+uses: hacs/action@22.5.0
 
-- name: HASS
-  uses: home-assistant/actions/hassfest@master
+
