@@ -1,0 +1,13 @@
+{
+  "domain": "solarmanagerch",
+  "name": "Solar Manager CH",
+  "codeowners": [
+    "@goir"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/goir/ha-solarmanager-ch",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/goir/ha-solarmanager-ch/issues",
+  "version": "0.0.0",
+  "requirements": ["pydantic>=1.10.5,<2", "aenum>=3.1.11"]
+}
