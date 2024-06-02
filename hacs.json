@@ -1,5 +1,5 @@
 {
     "name": "Solar Manager CH",
     "content_in_root": false,
-    "render_readme": false
+    "render_readme": true
 }
