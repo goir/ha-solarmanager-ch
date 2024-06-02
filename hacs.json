@@ -1,8 +1,7 @@
 {
     "name": "SolarManagerCH",
-    "filename": "solar_manager_ch.zip",
-    "hide_default_branch": true,
+    "hide_default_branch": false,
     "homeassistant": "2024.5.0",
     "render_readme": true,
-    "zip_release": true
+    "zip_release": false
 }
