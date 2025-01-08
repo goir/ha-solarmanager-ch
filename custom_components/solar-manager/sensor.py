@@ -16,8 +16,7 @@ from .const import DOMAIN
 _LOGGER = logging.getLogger(__name__)
 
 # Set-up from configuration.yaml
-async def async_setup_platform(hass: HomeAssistant, config, async_add_entities: AddEntitiesCallback,
-                               discovery_info=None):
+async def async_setup_platform(hass: HomeAssistant, config, async_add_entities: AddEntitiesCallback, discovery_info=None):
     _LOGGER.debug(f'sensor.py:async_setup_platform: {config}')
     await _do_setup_platform(hass, config, async_add_entities)
 
@@ -42,8 +41,8 @@ async def _do_setup_platform(hass: HomeAssistant, config, async_add_entities: Ad
     async_add_entities([EnergySensor(coordinator2, "consumption"),
                         EnergySensor(coordinator2, "production"),
                         EnergySensor(coordinator2, "self_consumption"),
-                        EnergySensor(coordinator2, "self_consumption_rate"),
-                        EnergySensor(coordinator2, "autarchy_degree")])
+                        EnergySensorPerc(coordinator2, "self_consumption_rate"),
+                        EnergySensorPerc(coordinator2, "autarchy_degree")])
 
     sensors = []
 
@@ -56,16 +55,15 @@ async def _do_setup_platform(hass: HomeAssistant, config, async_add_entities: Ad
 
 
 class SolarManagerDeviceSensor(CoordinatorEntity, SensorEntity):
-    def __init__(self, coordinator: DataUpdateCoordinator, device_info: DeviceInfo,
-                 attr: str, device_id: str) -> None:
+    def __init__(self, coordinator: DataUpdateCoordinator, device_info: DeviceInfo, attr: str, device_id: str) -> None:
         super().__init__(coordinator, None)
 
         self._device_info = device_info
         self._attr = attr
         self._device_id = device_id
-        self.entity_description = SensorEntityDescription(key=self.unique_id,
-                                                          device_class=SensorDeviceClass.POWER,
-                                                          native_unit_of_measurement=UnitOfPower.WATT,
+        self.entity_description = SensorEntityDescription(key=self.unique_id, 
+                                                          device_class=SensorDeviceClass.POWER, 
+                                                          native_unit_of_measurement=UnitOfPower.WATT, 
                                                           state_class=SensorStateClass.MEASUREMENT)
 
     @property
@@ -96,16 +94,15 @@ class SolarManagerDeviceSensor(CoordinatorEntity, SensorEntity):
 
 
 class SolarManagerDeviceTemperatureSensor(CoordinatorEntity, SensorEntity):
-    def __init__(self, coordinator: DataUpdateCoordinator, device_info: DeviceInfo,
-                 attr: str, device_id: str) -> None:
+    def __init__(self, coordinator: DataUpdateCoordinator, device_info: DeviceInfo, attr: str, device_id: str) -> None:
         super().__init__(coordinator, None)
 
         self._device_info = device_info
         self._attr = attr
         self._device_id = device_id
-        self.entity_description = SensorEntityDescription(key=self.name,
-                                                          device_class=SensorDeviceClass.TEMPERATURE,
-                                                          native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        self.entity_description = SensorEntityDescription(key=self.name, 
+                                                          device_class=SensorDeviceClass.TEMPERATURE, 
+                                                          native_unit_of_measurement=UnitOfTemperature.CELSIUS, 
                                                           state_class=SensorStateClass.MEASUREMENT)
 
     @property
@@ -158,11 +155,10 @@ class PowerSensor(SolarManagerSensor):
 
         self.context = context
         self.device_id = "overall"
-        self.entity_description = SensorEntityDescription(
-            key=self.unique_id,
-            device_class=SensorDeviceClass.POWER,
-            native_unit_of_measurement=UnitOfPower.WATT,
-            state_class=SensorStateClass.MEASUREMENT)
+        self.entity_description = SensorEntityDescription(key=self.unique_id, 
+                                                          device_class=SensorDeviceClass.POWER, 
+                                                          native_unit_of_measurement=UnitOfPower.WATT, 
+                                                          state_class=SensorStateClass.MEASUREMENT)
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -192,10 +188,10 @@ class BatterySensor(SolarManagerSensor):
         super().__init__(coordinator, context)
 
         self.context = context
-        self.entity_description = SensorEntityDescription(key=self.context,
-                                                          device_class=SensorDeviceClass.BATTERY,
-                                                          native_unit_of_measurement=PERCENTAGE,
-                                                          state_class=SensorStateClass.MEASUREMENT,
+        self.entity_description = SensorEntityDescription(key=self.context, 
+                                                          device_class=SensorDeviceClass.BATTERY, 
+                                                          native_unit_of_measurement=PERCENTAGE, 
+                                                          state_class=SensorStateClass.MEASUREMENT, 
                                                           name=self.context)
 
     @callback
@@ -210,10 +206,45 @@ class EnergySensor(SolarManagerSensor):
         super().__init__(coordinator, context)
 
         self.context = context
-        self.entity_description = SensorEntityDescription(key=self.context,
-                                                          device_class=SensorDeviceClass.ENERGY,
-                                                          native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
-                                                          state_class=SensorStateClass.TOTAL_INCREASING,
+        self.entity_description = SensorEntityDescription(key=self.context, 
+                                                          device_class=SensorDeviceClass.ENERGY, 
+                                                          native_unit_of_measurement=UnitOfEnergy.WATT_HOUR, 
+                                                          state_class=SensorStateClass.TOTAL_INCREASING, 
+                                                          name=self.context)
+        self.device_id = "statistics"
+        # set initial value
+        self._set_value()
+
+    def _set_value(self):
+        self._attr_native_value = getattr(self.coordinator.data, self.context)
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self._set_value()
+        self.async_write_ha_state()
+
+    @property
+    def name(self):
+        #  Return the name of the sensor.
+        return "{}_{}".format(DOMAIN, self.context)
+
+    @property
+    def unique_id(self):
+        _LOGGER.info("SOLAR: unique_id {}_{}".format("statistic", self.context))
+        # Return a unique_id based on the serial number
+        return "{}_{}_{}".format(DOMAIN, "statistic", self.context)
+
+
+class EnergySensorPerc(SolarManagerSensor):
+    def __init__(self, coordinator: DataUpdateCoordinator, context: Any = None) -> None:
+        super().__init__(coordinator, context)
+
+        self.context = context
+        self.entity_description = SensorEntityDescription(key=self.context, 
+                                                          device_class=SensorDeviceClass.POWER_FACTOR, 
+                                                          native_unit_of_measurement=PERCENTAGE, 
+                                                          state_class=SensorStateClass.MEASUREMENT, 
                                                           name=self.context)
         self.device_id = "statistics"
         # set initial value
