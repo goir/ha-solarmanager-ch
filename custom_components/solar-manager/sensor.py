@@ -2,7 +2,7 @@ import logging
 from typing import Any
 
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass, SensorEntityDescription
-from homeassistant.const import UnitOfTemperature, UnitOfEnergy, UnitOfPower, PERCENTAGE, ENERGY_KILO_WATT_HOUR
+from homeassistant.const import UnitOfTemperature, UnitOfEnergy, UnitOfPower, PERCENTAGE
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.config_entries import ConfigEntry
