@@ -11,7 +11,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, _Dat
 from .openapi_client import ApiClient, Configuration, CustomerApi, UserApi, GetOverviewApi, DataApi, \
     SensorApi, GetStatisticsOfTheGatewayApi
 
-from const import CONF_SMART_MANAGER_ID
+from .const import CONF_SMART_MANAGER_ID
 
 _LOGGER = logging.getLogger(__name__)
 
