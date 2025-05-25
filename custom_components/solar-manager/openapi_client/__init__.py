@@ -58,6 +58,8 @@ from openapi_client.exceptions import ApiValueError
 from openapi_client.exceptions import ApiKeyError
 from openapi_client.exceptions import ApiAttributeError
 from openapi_client.exceptions import ApiException
+from openapi_client.exceptions import ServiceException
+
 
 # import models into sdk package
 from openapi_client.models.arrows_schema import ArrowsSchema
