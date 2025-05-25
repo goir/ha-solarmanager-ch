@@ -9,7 +9,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.debounce import Debouncer
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, _DataT
 from .openapi_client import ApiClient, Configuration, CustomerApi, UserApi, GetOverviewApi, DataApi, \
-    SensorApi, GetStatisticsOfTheGatewayApi
+    SensorApi, ServiceException, GetStatisticsOfTheGatewayApi
 
 from const import CONF_SMART_MANAGER_ID
 
@@ -35,8 +35,16 @@ class SolarUpdateCoordinator(DataUpdateCoordinator):
         self.sensor_api = SensorApi(client)
 
     def _update_all(self):
-        gateway_data = self.gateway_api.get_v1_stream_gateway_smid(sm_id=self.sm_id)
-        device_data = self.sensor_api.get_v1_info_sensors_smid(sm_id=self.sm_id)
+        try:
+            gateway_data = self.gateway_api.get_v1_stream_gateway_smid(sm_id=self.sm_id)
+        except ServiceException as e:
+            gateway_data = {}
+            _LOGGER.warning("SOLAR: Gateway Stream Data API call failed: %s", e)
+        try:
+            device_data = self.sensor_api.get_v1_info_sensors_smid(sm_id=self.sm_id)
+        except ServiceException as e:
+            device_data = {}
+            _LOGGER.warning("SOLAR: Device Data API call failed: %s", e)
 
         return {'gateway': gateway_data, 'device_info': device_data}
 
@@ -65,7 +73,12 @@ class SolarManagerStatisticsUpdateCoordinator(DataUpdateCoordinator):
     def _update_all(self):
         today_start = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         today_end = datetime.datetime.now().replace(hour=23, minute=59, second=59, microsecond=999)
-        gateway_data = self.gateway_api.get_v1_statistics_gateways_smid(self.sm_id, "high", today_start, today_end)
+        
+        try:
+            gateway_data = self.gateway_api.get_v1_statistics_gateways_smid(self.sm_id, "high", today_start, today_end)
+        except ServiceException as e:
+            gateway_data = {}
+            _LOGGER.warning("SOLAR: Gateway Statistics Data API call failed: %s", e)
 
         _LOGGER.debug("SOLAR statistics data: {}".format(gateway_data))
 
